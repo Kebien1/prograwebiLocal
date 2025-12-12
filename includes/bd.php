@@ -1,6 +1,6 @@
 <?php
 $servidor = "localhost";
-$basededatos = "prograweb";
+$basededatos = "if0_40651214_db_prograwebi";
 $usuario = "root";
 $clave = "";
 
