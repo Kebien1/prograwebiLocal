@@ -1,7 +1,7 @@
 <?php
 // Archivo: dashboard.php
-include("includes/autenticacion.php");
 include("config/bd.php");
+include("includes/autenticacion.php");
 include("includes/header.php");
 ?>
 
