@@ -3,30 +3,26 @@
 include("../../includes/autenticacion.php");
 include("../../config/bd.php");
 
-// Si no recibimos ID de rol, intentamos tomar el primero
 $idRol = isset($_GET['idRol']) ? $_GET['idRol'] : "";
 
-// Obtener lista de roles para el select
+// Obtener roles
 $sqlRoles = $conexion->prepare("SELECT * FROM rol");
 $sqlRoles->execute();
 $todos_roles = $sqlRoles->fetchAll(PDO::FETCH_ASSOC);
 
-// Si no hay ID seleccionado, tomamos el primero
 if(empty($idRol) && count($todos_roles) > 0) {
     $idRol = $todos_roles[0]['ID'];
 }
 
-// PROCESAR FORMULARIO (Guardar permisos)
+// Procesar Guardado
 if($_POST){
     $idRol = $_POST['idRol'];
-    $permisos = isset($_POST['permisos']) ? $_POST['permisos'] : []; // Array de IDs seleccionados
+    $permisos = isset($_POST['permisos']) ? $_POST['permisos'] : []; 
 
-    // 1. Borramos todos los permisos anteriores de este rol
     $borrar = $conexion->prepare("DELETE FROM detalles WHERE IdRol = :r");
     $borrar->bindParam(":r", $idRol);
     $borrar->execute();
 
-    // 2. Insertamos los nuevos seleccionados
     foreach($permisos as $idPermiso){
         $insertar = $conexion->prepare("INSERT INTO detalles (IdRol, IdPermiso) VALUES (:r, :p)");
         $insertar->bindParam(":r", $idRol);
@@ -36,25 +32,24 @@ if($_POST){
     $mensaje = "Permisos actualizados correctamente.";
 }
 
-// Obtener permisos disponibles (todos)
+// Obtener permisos
 $sqlPermisos = $conexion->prepare("SELECT * FROM permisos");
 $sqlPermisos->execute();
 $todos_permisos = $sqlPermisos->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener permisos que YA tiene el rol (para marcarlos)
+// Obtener asignados
 $permisos_asignados = [];
 if(!empty($idRol)){
     $sqlAsignados = $conexion->prepare("SELECT IdPermiso FROM detalles WHERE IdRol = :r");
     $sqlAsignados->bindParam(":r", $idRol);
     $sqlAsignados->execute();
-    // Creamos un array simple con solo los IDs [1, 5, 8...]
     $permisos_asignados = $sqlAsignados->fetchAll(PDO::FETCH_COLUMN, 0);
 }
 
 include("../../includes/header.php"); 
 ?>
 
-<div class="card shadow-sm">
+<div class="card shadow-sm mb-5">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Asignar Permisos a Roles</h5>
     </div>
@@ -93,7 +88,7 @@ include("../../includes/header.php");
                     $marcado = in_array($p['ID'], $permisos_asignados) ? "checked" : "";
                 ?>
                 <div class="col">
-                    <div class="form-check p-3 border rounded bg-white h-100 shadow-sm">
+                    <div class="form-check p-3 border rounded bg-white h-100 shadow-sm position-relative">
                         <input class="form-check-input" type="checkbox" name="permisos[]" 
                                value="<?php echo $p['ID']; ?>" id="p_<?php echo $p['ID']; ?>" 
                                <?php echo $marcado; ?>>
@@ -106,8 +101,8 @@ include("../../includes/header.php");
             </div>
 
             <div class="mt-4 border-top pt-3 text-end">
-                <a href="index.php" class="btn btn-secondary me-2">Volver</a>
-                <button type="submit" class="btn btn-success btn-lg px-5">
+                <a href="index.php" class="btn btn-secondary me-2 position-relative" style="z-index: 2;">Volver</a>
+                <button type="submit" class="btn btn-success btn-lg px-5 position-relative" style="z-index: 2;">
                     <i class="bi bi-save me-2"></i>Guardar Cambios
                 </button>
             </div>

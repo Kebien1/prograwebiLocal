@@ -1,6 +1,7 @@
 <?php
+// Archivo: modules/auth/login.php
 session_start();
-include("../../config/bd.php"); // Subimos 2 niveles para llegar a config
+include("../../config/bd.php"); 
 
 $error = "";
 
@@ -8,20 +9,15 @@ if ($_POST) {
     $email = $_POST['Email'];
     $password = $_POST['Password'];
 
-    // Buscamos usuario por Email
     $sentencia = $conexion->prepare("SELECT * FROM usuario WHERE Email = :e LIMIT 1");
     $sentencia->bindParam(":e", $email);
     $sentencia->execute();
     $usuario = $sentencia->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario) {
-        // Verificar contraseña (usamos password_verify para seguridad)
         if (password_verify($password, $usuario['Password'])) {
-            // Verificar si la cuenta está activa (Estado 1)
             if ($usuario['Estado'] == 1) {
-                // Verificar si el correo está verificado
                 if ($usuario['Verificado'] == 1) {
-                    // ¡Login Exitoso!
                     $_SESSION['user_id'] = $usuario['ID'];
                     $_SESSION['nick'] = $usuario['Nick'];
                     $_SESSION['rol'] = $usuario['IdRol'];
@@ -49,6 +45,7 @@ if ($_POST) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
 
@@ -75,6 +72,12 @@ if ($_POST) {
             <a href="registro.php" class="text-decoration-none">Crear cuenta nueva</a>
             <br>
             <a href="olvido.php" class="text-decoration-none text-muted small">Olvidé mi contraseña</a>
+            
+            <hr class="my-4">
+            
+            <a href="../../index.php" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+            </a>
         </div>
     </div>
 

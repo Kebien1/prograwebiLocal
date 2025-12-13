@@ -1,20 +1,27 @@
 <?php
 // Archivo: dashboard.php
-include("config/bd.php");
-include("includes/autenticacion.php");
-include("includes/header.php");
+include("config/bd.php");          // 1. Configuración PRIMERO
+include("includes/autenticacion.php"); // 2. Seguridad
+include("includes/header.php");    // 3. Diseño
 ?>
 
-<div class="row mb-4">
-    <div class="col-12">
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
         <h1 class="display-5 fw-bold text-dark">Hola, <?php echo $_SESSION['nick']; ?> 👋</h1>
         <p class="lead text-muted">Bienvenido al panel de control del sistema.</p>
     </div>
+    <div class="col-md-4 text-md-end">
+        <a href="index.php" class="btn btn-outline-dark shadow-sm">
+            <i class="bi bi-globe me-2"></i>Ver Página de Inicio
+        </a>
+    </div>
 </div>
+
+<hr class="mb-5">
 
 <div class="row g-4">
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm">
+        <div class="card h-100 border-0 shadow-sm hover-shadow">
             <div class="card-body text-center p-4">
                 <div class="display-4 text-primary mb-3"><i class="bi bi-people-fill"></i></div>
                 <h4 class="card-title">Usuarios</h4>
@@ -25,7 +32,7 @@ include("includes/header.php");
     </div>
 
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm">
+        <div class="card h-100 border-0 shadow-sm hover-shadow">
             <div class="card-body text-center p-4">
                 <div class="display-4 text-success mb-3"><i class="bi bi-shield-lock-fill"></i></div>
                 <h4 class="card-title">Roles</h4>
@@ -36,7 +43,7 @@ include("includes/header.php");
     </div>
 
     <div class="col-md-4">
-        <div class="card h-100 border-0 shadow-sm">
+        <div class="card h-100 border-0 shadow-sm hover-shadow">
             <div class="card-body text-center p-4">
                 <div class="display-4 text-warning mb-3"><i class="bi bi-key-fill"></i></div>
                 <h4 class="card-title">Permisos</h4>
