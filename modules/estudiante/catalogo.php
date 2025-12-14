@@ -8,12 +8,12 @@ require_once '../../includes/header.php';
 $cursos = $conexion->query("SELECT * FROM cursos ORDER BY id DESC")->fetchAll();
 $libros = $conexion->query("SELECT * FROM libros ORDER BY id DESC")->fetchAll();
 
-// 2. Verificar compras previas (para no vender lo mismo dos veces)
+// 2. Verificar compras previas
 $mis_compras = $conexion->prepare("SELECT item_id, tipo_item FROM compras WHERE usuario_id = ?");
 $mis_compras->execute([$_SESSION['usuario_id']]);
 $comprados_raw = $mis_compras->fetchAll();
 
-// Organizar compras para búsqueda rápida: $comprados['curso'][ID] = true
+// Organizar compras para búsqueda rápida
 $comprados = [];
 foreach ($comprados_raw as $c) {
     $comprados[$c['tipo_item']][$c['item_id']] = true;
@@ -52,9 +52,8 @@ foreach ($comprados_raw as $c) {
                                     <i class="bi bi-check-circle"></i> Ya Comprado
                                 </button>
                             <?php else: ?>
-                                <a href="procesar_compra.php?tipo=curso&id=<?php echo $c['id']; ?>&precio=<?php echo $c['precio']; ?>" 
-                                   class="btn btn-outline-primary w-100 rounded-pill"
-                                   onclick="return confirm('¿Confirmar compra por $<?php echo $c['precio']; ?>?');">
+                                <a href="pasarela.php?tipo=curso&id=<?php echo $c['id']; ?>&precio=<?php echo $c['precio']; ?>" 
+                                   class="btn btn-outline-primary w-100 rounded-pill">
                                     Comprar Ahora
                                 </a>
                             <?php endif; ?>
@@ -91,9 +90,8 @@ foreach ($comprados_raw as $c) {
                                     <i class="bi bi-check-circle"></i> En tu Biblioteca
                                 </button>
                             <?php else: ?>
-                                <a href="procesar_compra.php?tipo=libro&id=<?php echo $l['id']; ?>&precio=<?php echo $l['precio']; ?>" 
-                                   class="btn btn-outline-success w-100 rounded-pill"
-                                   onclick="return confirm('¿Confirmar compra por $<?php echo $l['precio']; ?>?');">
+                                <a href="pasarela.php?tipo=libro&id=<?php echo $l['id']; ?>&precio=<?php echo $l['precio']; ?>" 
+                                   class="btn btn-outline-success w-100 rounded-pill">
                                     Adquirir PDF
                                 </a>
                             <?php endif; ?>
