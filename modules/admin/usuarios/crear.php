@@ -1,7 +1,7 @@
 <?php 
 // Archivo: modules/usuarios/crear.php
-include("../../includes/autenticacion.php");
-include("../../config/bd.php"); 
+include("../../../includes/autenticacion.php");
+include("../../../config/bd.php"); 
 
 // Obtener roles para el select
 $stmt = $conexion->prepare("SELECT * FROM rol");
@@ -32,7 +32,7 @@ if($_POST){
     }
 }
 
-include("../../includes/header.php");
+include("../../../includes/header.php");
 ?>
 
 <div class="row justify-content-center">
@@ -85,4 +85,4 @@ include("../../includes/header.php");
     </div>
 </div>
 
-<?php include("../../includes/footer.php"); ?>
+<?php include("../../../includes/footer.php"); ?>

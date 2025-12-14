@@ -1,7 +1,7 @@
 <?php 
 // Archivo: modules/permisos/index.php
-include("../../includes/autenticacion.php");
-include("../../config/bd.php");
+include("../../../includes/autenticacion.php");
+include("../../../config/bd.php");
 
 // Eliminar
 if(isset($_GET['txtID'])){
@@ -18,7 +18,7 @@ $sentencia = $conexion->prepare("SELECT * FROM permisos");
 $sentencia->execute();
 $lista_permisos = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
-include("../../includes/header.php"); 
+include("../../../includes/header.php"); 
 ?>
 
 <div class="card shadow-sm border-0">
@@ -60,4 +60,4 @@ include("../../includes/header.php");
     </div>
 </div>
 
-<?php include("../../includes/footer.php"); ?>
+<?php include("../../../includes/footer.php"); ?>

@@ -1,7 +1,7 @@
 <?php 
 // Archivo: modules/roles/index.php
-include("../../includes/autenticacion.php");
-include("../../config/bd.php");
+include("../../../includes/autenticacion.php");
+include("../../../config/bd.php");
 
 // 1. Eliminar Rol
 if(isset($_GET['txtID'])){
@@ -18,7 +18,7 @@ $sentencia = $conexion->prepare("SELECT * FROM rol");
 $sentencia->execute();
 $lista_roles = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
-include("../../includes/header.php"); 
+include("../../../includes/header.php"); 
 ?>
 
 <div class="card shadow-sm border-0">
@@ -74,4 +74,4 @@ include("../../includes/header.php");
     </div>
 </div>
 
-<?php include("../../includes/footer.php"); ?>
+<?php include("../../../includes/footer.php"); ?>

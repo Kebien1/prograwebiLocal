@@ -1,7 +1,7 @@
 <?php 
 // Archivo: modules/usuarios/editar.php
-include("../../includes/autenticacion.php");
-include("../../config/bd.php"); 
+include("../../../includes/autenticacion.php");
+include("../../../config/bd.php"); 
 
 // 1. Obtener datos del usuario a editar
 if(isset($_GET["txtID"])){
@@ -51,7 +51,7 @@ if($_POST){
     }
 }
 
-include("../../includes/header.php");
+include("../../../includes/header.php");
 ?>
 
 <div class="row justify-content-center">
@@ -110,4 +110,4 @@ include("../../includes/header.php");
     </div>
 </div>
 
-<?php include("../../includes/footer.php"); ?>
+<?php include("../../../includes/footer.php"); ?>

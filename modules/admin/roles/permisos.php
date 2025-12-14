@@ -1,7 +1,7 @@
 <?php 
 // Archivo: modules/roles/permisos.php
-include("../../includes/autenticacion.php");
-include("../../config/bd.php");
+include("../../../includes/autenticacion.php");
+include("../../../config/bd.php");
 
 $idRol = isset($_GET['idRol']) ? $_GET['idRol'] : "";
 
@@ -46,7 +46,7 @@ if(!empty($idRol)){
     $permisos_asignados = $sqlAsignados->fetchAll(PDO::FETCH_COLUMN, 0);
 }
 
-include("../../includes/header.php"); 
+include("../../../includes/header.php"); 
 ?>
 
 <div class="card shadow-sm mb-5">
@@ -112,4 +112,4 @@ include("../../includes/header.php");
     </div>
 </div>
 
-<?php include("../../includes/footer.php"); ?>
+<?php include("../../../includes/footer.php"); ?>

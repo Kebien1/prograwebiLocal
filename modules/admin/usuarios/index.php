@@ -1,7 +1,7 @@
 <?php 
 // Archivo: modules/usuarios/index.php
-include("../../includes/autenticacion.php");
-include("../../config/bd.php");
+include("../../../includes/autenticacion.php");
+include("../../../config/bd.php");
 
 // 1. Lógica para ELIMINAR usuario
 if(isset($_GET['txtID'])){
@@ -20,7 +20,7 @@ $sentencia = $conexion->prepare("SELECT u.*, r.Descrip as RolNombre FROM usuario
 $sentencia->execute();
 $lista_usuarios = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 
-include("../../includes/header.php"); 
+include("../../../includes/header.php"); 
 ?>
 
 <div class="card shadow-sm border-0">
@@ -86,4 +86,4 @@ include("../../includes/header.php");
     </div>
 </div>
 
-<?php include("../../includes/footer.php"); ?>
+<?php include("../../../includes/footer.php"); ?>
