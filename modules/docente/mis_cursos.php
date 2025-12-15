@@ -38,7 +38,7 @@ $misCursos = $stmt->fetchAll();
                         <h5 class="card-title fw-bold mb-0 text-dark"><?php echo htmlspecialchars($c['titulo']); ?></h5>
                     </div>
                     <div class="card-body">
-                        <p class="card-text text-muted small text-truncate-3">
+                        <p class="card-text text-muted small text-truncate">
                             <?php echo htmlspecialchars($c['descripcion']); ?>
                         </p>
                         <hr class="text-muted opacity-25">
@@ -62,14 +62,5 @@ $misCursos = $stmt->fetchAll();
         </div>
     <?php endif; ?>
 </div>
-
-<style>
-    .text-truncate-3 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-</style>
 
 <?php require_once '../../includes/footer.php'; ?>

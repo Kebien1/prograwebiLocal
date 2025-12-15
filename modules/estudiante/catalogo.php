@@ -5,29 +5,23 @@ verificarRol(3);
 require_once '../../includes/header.php';
 
 // --- LÓGICA DEL BUSCADOR ---
-// 1. Verificamos si hay una búsqueda en la URL (ej: catalogo.php?q=python)
 $busqueda = $_GET['q'] ?? ''; 
 
-// 2. Preparamos la consulta base
 $sql = "SELECT * FROM cursos";
 $params = [];
 
-// 3. Si hay búsqueda, modificamos la consulta SQL
 if (!empty($busqueda)) {
-    // Buscamos coincidencias en el título o la descripción
     $sql .= " WHERE titulo LIKE :texto OR descripcion LIKE :texto";
-    $params[':texto'] = "%$busqueda%"; // Los % son comodines para buscar texto parcial
+    $params[':texto'] = "%$busqueda%"; 
 }
 
-// 4. Ordenamos siempre por el más nuevo
 $sql .= " ORDER BY id DESC";
 
-// 5. Ejecutamos la consulta preparada
 $stmt = $conexion->prepare($sql);
 $stmt->execute($params);
 $cursos = $stmt->fetchAll();
 
-// --- LÓGICA DE LIBROS Y COMPRAS PREVIAS (Igual que antes) ---
+// --- LÓGICA DE LIBROS ---
 $libros = $conexion->query("SELECT * FROM libros ORDER BY id DESC")->fetchAll();
 
 $mis_compras = $conexion->prepare("SELECT item_id, tipo_item FROM compras WHERE usuario_id = ?");
@@ -87,8 +81,11 @@ foreach ($comprados_raw as $c) {
                                 <span class="badge bg-primary bg-opacity-10 text-primary">Curso</span>
                                 <h4 class="fw-bold mb-0 text-primary">$<?php echo number_format($c['precio'], 0); ?></h4>
                             </div>
-                            <h5 class="card-title fw-bold text-truncate"><?php echo htmlspecialchars($c['titulo']); ?></h5>
-                            <p class="card-text text-muted small" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            <h5 class="card-title fw-bold text-truncate" title="<?php echo htmlspecialchars($c['titulo']); ?>">
+                                <?php echo htmlspecialchars($c['titulo']); ?>
+                            </h5>
+                            
+                            <p class="card-text text-muted small text-truncate">
                                 <?php echo htmlspecialchars($c['descripcion']); ?>
                             </p>
                         </div>
@@ -132,7 +129,9 @@ foreach ($comprados_raw as $c) {
                                 <span class="badge bg-success bg-opacity-10 text-success">E-Book</span>
                                 <h4 class="fw-bold mb-0">$<?php echo number_format($l['precio'], 0); ?></h4>
                             </div>
-                            <h5 class="card-title fw-bold"><?php echo htmlspecialchars($l['titulo']); ?></h5>
+                            <h5 class="card-title fw-bold text-truncate" title="<?php echo htmlspecialchars($l['titulo']); ?>">
+                                <?php echo htmlspecialchars($l['titulo']); ?>
+                            </h5>
                             <p class="small text-muted mb-0">Autor: <?php echo htmlspecialchars($l['autor']); ?></p>
                         </div>
                         <div class="card-footer bg-white border-0 pb-3">
@@ -142,7 +141,7 @@ foreach ($comprados_raw as $c) {
                                 </button>
                             <?php else: ?>
                                 <a href="pasarela.php?tipo=libro&id=<?php echo $l['id']; ?>&precio=<?php echo $l['precio']; ?>" 
-                                   class="btn btn-outline-success w-100 rounded-pill">
+                                    class="btn btn-outline-success w-100 rounded-pill">
                                     Adquirir PDF
                                 </a>
                             <?php endif; ?>
