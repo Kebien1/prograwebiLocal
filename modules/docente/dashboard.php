@@ -114,11 +114,11 @@ try {
         <div class="col">
             <div class="card h-100 border-0 shadow-sm text-center py-4">
                 <div class="card-body">
-                    <div class="mb-3 text-success"><i class="bi bi-file-earmark-pdf-fill display-4"></i></div>
-                    <h5 class="fw-bold">Material de Apoyo</h5>
-                    <p class="text-muted small">Sube libros o guías PDF para tus estudiantes.</p>
-                    <button class="btn btn-outline-success rounded-pill" disabled>Próximamente</button>
-                </div>
+    <div class="mb-3 text-success"><i class="bi bi-file-earmark-pdf-fill display-4"></i></div>
+    <h5 class="fw-bold">Material de Apoyo</h5>
+    <p class="text-muted small">Sube libros o guías PDF para tus estudiantes.</p>
+    <a href="materiales.php" class="btn btn-outline-success rounded-pill stretched-link">Gestionar Archivos</a>
+</div>
             </div>
         </div>
     </div>

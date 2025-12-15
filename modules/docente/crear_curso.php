@@ -10,22 +10,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $desc = trim($_POST['descripcion']);
     $precio = $_POST['precio'];
     $docente_id = $_SESSION['usuario_id'];
+    $imagen_nombre = null;
+
+    // --- PROCESAR IMAGEN ---
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
+        $permitidos = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        $tipo = $_FILES['imagen']['type'];
+        
+        if (in_array($tipo, $permitidos)) {
+            // Crear carpeta si no existe
+            $directorio = "../../uploads/cursos/";
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0777, true);
+            }
+            
+            // Nombre único: curso_TIMESTAMP.jpg
+            $ext = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
+            $imagen_nombre = "curso_" . time() . "." . $ext;
+            
+            move_uploaded_file($_FILES['imagen']['tmp_name'], $directorio . $imagen_nombre);
+        } else {
+            $mensaje = "<div class='alert alert-warning'>Formato de imagen no válido. Solo JPG, PNG o WEBP.</div>";
+        }
+    }
 
     if($titulo && $precio >= 0) {
-        // En tu DB tienes fecha_creacion, así que usamos NOW() en SQL
-        // Si no tienes esa columna en la tabla cursos, borra ", fecha_creacion" y ", NOW()"
-        $sql = "INSERT INTO cursos (titulo, descripcion, precio, docente_id, fecha_creacion) VALUES (?, ?, ?, ?, NOW())";
+        $sql = "INSERT INTO cursos (titulo, descripcion, precio, docente_id, imagen_portada, fecha_creacion) VALUES (?, ?, ?, ?, ?, NOW())";
         
         try {
             $stmt = $conexion->prepare($sql);
-            $stmt->execute([$titulo, $desc, $precio, $docente_id]);
+            $stmt->execute([$titulo, $desc, $precio, $docente_id, $imagen_nombre]);
             header("Location: mis_cursos.php");
             exit;
         } catch (PDOException $e) {
             $mensaje = "<div class='alert alert-danger'>Error al guardar: " . $e->getMessage() . "</div>";
         }
     } else {
-        $mensaje = "<div class='alert alert-warning'>Por favor revisa los datos. El precio no puede ser negativo.</div>";
+        $mensaje = "<div class='alert alert-warning'>Por favor revisa los datos.</div>";
     }
 }
 
@@ -43,7 +64,7 @@ require_once '../../includes/header.php';
                     
                     <?php echo $mensaje; ?>
 
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         <div class="mb-4">
                             <label class="form-label fw-bold">Título del Curso</label>
                             <input type="text" name="titulo" class="form-control form-control-lg" placeholder="Ej: Introducción a Python" required>
@@ -65,8 +86,8 @@ require_once '../../includes/header.php';
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Imagen de Portada</label>
-                                <input type="file" class="form-control" disabled title="Funcionalidad disponible en versión Pro">
-                                <div class="form-text text-muted">La subida de imágenes estará disponible pronto.</div>
+                                <input type="file" name="imagen" class="form-control" accept="image/*">
+                                <div class="form-text text-muted">Sube una imagen atractiva (JPG, PNG).</div>
                             </div>
                         </div>
 

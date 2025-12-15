@@ -47,13 +47,15 @@ $misCursos = $stmt->fetchAll();
                             <span><i class="bi bi-person-video3"></i> Autor</span>
                         </div>
                     </div>
+                    
                     <div class="card-footer bg-white border-0 pb-4 pt-0">
                         <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary btn-sm rounded-pill">
-                                <i class="bi bi-pencil"></i> Editar Contenido
-                            </button>
+                            <a href="gestionar_lecciones.php?id=<?php echo $c['id']; ?>" class="btn btn-outline-primary btn-sm rounded-pill">
+                                <i class="bi bi-collection-play"></i> Gestionar Lecciones
+                            </a>
                         </div>
                     </div>
+                    
                 </div>
             </div>
             <?php endforeach; ?>

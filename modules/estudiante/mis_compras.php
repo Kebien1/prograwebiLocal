@@ -64,9 +64,11 @@ $misLibros = $listaLibros->fetchAll();
                                         <small class="text-muted">
                                             <i class="bi bi-calendar3"></i> <?php echo date('d/m/Y', strtotime($c['fecha_compra'])); ?>
                                         </small>
-                                        <button class="btn btn-sm btn-primary rounded-pill px-3">
-                                            <i class="bi bi-play-fill"></i> Ver Clases
-                                        </button>
+                                        
+                                        <a href="aula.php?id=<?php echo $c['id']; ?>" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm">
+                                            <i class="bi bi-play-fill"></i> Ir al Aula
+                                        </a>
+
                                     </div>
                                 </div>
                             <?php endforeach; ?>

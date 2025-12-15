@@ -3,44 +3,40 @@ session_start();
 require_once '../../config/bd.php';
 
 $mensaje = "";
-$token = $_GET['token'] ?? '';
-$tokenValido = false;
-$usuario_id = null;
+$email_pre = $_GET['email'] ?? '';
 
-// 1. Validar Token al cargar
-if ($token) {
-    $stmt = $conexion->prepare("SELECT usuario_id FROM recuperacion_tokens WHERE token = :tok AND expira_el > NOW()");
-    $stmt->execute([':tok' => $token]);
-    $row = $stmt->fetch();
-    
-    if ($row) {
-        $tokenValido = true;
-        $usuario_id = $row['usuario_id'];
-    } else {
-        $mensaje = "<div class='alert alert-danger'>El enlace es inválido o ha expirado.</div>";
-    }
-} else {
-    $mensaje = "<div class='alert alert-danger'>Token no proporcionado.</div>";
-}
-
-// 2. Procesar Nueva Contraseña
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $codigo = $_POST['codigo'];
     $pass1 = $_POST['pass1'];
     $pass2 = $_POST['pass2'];
-    
+
     if ($pass1 !== $pass2) {
         $mensaje = "<div class='alert alert-warning'>Las contraseñas no coinciden.</div>";
     } else {
-        // Actualizar Usuario
-        $hash = password_hash($pass1, PASSWORD_BCRYPT);
-        $stmtUpd = $conexion->prepare("UPDATE usuarios SET password = :p WHERE id = :uid");
-        $stmtUpd->execute([':p' => $hash, ':uid' => $usuario_id]);
-        
-        // Borrar Token usado
-        $conexion->prepare("DELETE FROM recuperacion_tokens WHERE usuario_id = ?")->execute([$usuario_id]);
-        
-        $mensaje = "<div class='alert alert-success'>¡Contraseña actualizada! <a href='login.php'>Inicia sesión aquí</a></div>";
-        $tokenValido = false; // Ocultar formulario
+        // Verificar código
+        $sql = "SELECT t.usuario_id 
+                FROM recuperacion_tokens t 
+                JOIN usuarios u ON t.usuario_id = u.id 
+                WHERE u.email = :email AND t.token = :token AND t.expira_el > NOW()";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute([':email' => $email, ':token' => $codigo]);
+        $row = $stmt->fetch();
+
+        if ($row) {
+            // Cambiar contraseña
+            $hash = password_hash($pass1, PASSWORD_BCRYPT);
+            $conexion->prepare("UPDATE usuarios SET password = :p WHERE id = :uid")
+                     ->execute([':p' => $hash, ':uid' => $row['usuario_id']]);
+            
+            // Borrar token
+            $conexion->prepare("DELETE FROM recuperacion_tokens WHERE usuario_id = ?")->execute([$row['usuario_id']]);
+
+            echo "<script>alert('¡Contraseña cambiada! Inicia sesión.'); window.location='login.php';</script>";
+            exit;
+        } else {
+            $mensaje = "<div class='alert alert-danger'>Código inválido o expirado.</div>";
+        }
     }
 }
 ?>
@@ -55,12 +51,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
     <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
         <div class="text-center mb-3">
-            <h4 class="fw-bold">Restablecer Contraseña</h4>
+            <h4 class="fw-bold">Establecer Nueva Clave</h4>
         </div>
         <?php echo $mensaje; ?>
         
-        <?php if ($tokenValido): ?>
         <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($email_pre); ?>" readonly style="background-color: #e9ecef;">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold text-primary">Código Recibido (6 dígitos)</label>
+                <input type="text" name="codigo" class="form-control text-center fw-bold fs-5" placeholder="000000" maxlength="6" required>
+            </div>
+            <hr>
             <div class="mb-3">
                 <label class="form-label">Nueva Contraseña</label>
                 <input type="password" name="pass1" class="form-control" required minlength="6">
@@ -71,11 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tokenValido) {
             </div>
             <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
         </form>
-        <?php endif; ?>
-        
-        <div class="text-center mt-3">
-            <a href="login.php" class="text-decoration-none">Ir al Login</a>
-        </div>
     </div>
 </body>
 </html>
